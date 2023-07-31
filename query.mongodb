@@ -1,0 +1,84 @@
+/**
+ * Create bd
+ */
+use("db_example");
+
+/**
+ * ? Create collections
+ */
+
+let options = [
+  "sucursal",
+  "sucursal_automovil",
+  "automovil",
+  "reserva",
+  "alquiler",
+  "cliente",
+  "registro_devolucion",
+  "empleado"
+];
+
+for(let x = 0; x < options.length; x++) db.createCollection(options[x])
+
+/**
+ * Structure for collections
+ */
+
+use("db_example");
+db.sucursal.insertOne({
+    _id: ObjectId(1),
+    sucursal_id: ObjectId(1),
+    nombre: "Sucursal la mayoritaria",
+    direccion: "Calle 33",
+    telefono: "84832131321"
+}); 
+
+use("db_example"); 
+db.automovil.insertOne({
+    _id: ObjectId(1),
+    automovil_id: ObjectId(1),
+    marca: "Roll royce",
+    modelo: "2020",
+    Anio: "2020",
+    tipo: "Deportivo",
+    capacidad: "100kh",
+    precio_diario: 100
+});
+
+use("db_example"); 
+db.sucursal_automovil.insertOne({
+    sucursal_id: ObjectId(1),
+    automovil_id: ObjectId(1),
+    cantidad_disponible: 15
+})
+
+
+/**
+ * Relations 
+ */
+
+use("db_example")
+db.sucursal.aggregate([
+    {
+        $match: {
+            sucursal_id: 1 
+        }
+    },
+    {
+        $lookup: {
+            from: "sucursal_automovil",
+            localField: "_id",
+            foreignField: "sucursal_id",
+            as: "autos" 
+        }
+    },
+    {
+        $project: {
+            _id: 0, 
+            Nombre: 1,
+            "autos._id": 1,
+            "autos.Cantidad_Disponible": 1 
+        }
+    }
+]);
+
