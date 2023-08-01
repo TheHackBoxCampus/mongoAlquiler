@@ -15,6 +15,7 @@ let options = [
   "alquiler",
   "cliente",
   "registro_devolucion",
+  "registro_entrega",
   "empleado"
 ];
 
@@ -26,17 +27,16 @@ for(let x = 0; x < options.length; x++) db.createCollection(options[x])
 
 use("db_example");
 db.sucursal.insertOne({
-    _id: ObjectId(1),
-    sucursal_id: ObjectId(1),
+    _id: 1,
+    sucursal_id: 1,
     nombre: "Sucursal la mayoritaria",
     direccion: "Calle 33",
     telefono: "84832131321"
 }); 
 
-use("db_example"); 
 db.automovil.insertOne({
-    _id: ObjectId(1),
-    automovil_id: ObjectId(1),
+    _id: 123,
+    automovil_id: 1,
     marca: "Roll royce",
     modelo: "2020",
     Anio: "2020",
@@ -45,40 +45,124 @@ db.automovil.insertOne({
     precio_diario: 100
 });
 
-use("db_example"); 
 db.sucursal_automovil.insertOne({
-    sucursal_id: ObjectId(1),
-    automovil_id: ObjectId(1),
+    _id: 1,
+    sucursal_id: 1,
+    automovil_id: 1,
     cantidad_disponible: 15
+}); 
+db.reserva.insertOne({
+    _id: 1,
+    ID_cliente: 1,
+    ID_automovil: 123,
+    fecha_Reserva: Date.now(),
+    fecha_inicio: Date.now(),
+    fecha_fin: Date.now() + 2400000,
+    Estado: "Realizado"
 })
 
+use("db_example")
+db.cliente.insertOne({
+    _id: 1,
+    nombre: "juan",
+    apellido: "diego",
+    DNI: "12331312",
+    direccion: "carrera 2303",
+    telefono: "1221211221",
+    email: "diegoam@gmail.com"
+})
 
+db.alquiler.insertOne({
+    _id: 1,
+    ID_cliente: 1,
+    ID_automovil: 1,
+    fecha_inicio: Date.UTC(1, 9, 1),
+    fecha_fin: Date.UTC(1, 12, 1),
+    costo_total: 100,
+    estado: "realizado"
+})
+use("db_example")
+db.registro_devolucion.insertOne({
+    _id: 1, 
+    ID_alquiler: 1,
+    ID_empleado: 1,
+    fecha_devolucion: null,
+    combustible_devuelto: null,
+    kilomatraje_devuelto: null,
+    monto_adicional: null
+})
+
+db.registro_entrega.insertOne({
+    _id: 1,
+    ID_alquiler: 1,
+    ID_empleado: 1,
+    fecha_entrega: Date.now(),
+    combustible_entregado: 3.2,
+    kilomatraje_entregado: 1.00 
+})
+
+db.empleado.insertOne({
+    _id: 1,
+    nombre: "Roberto",
+    apellido: "Merlano",
+    DNI: "1211212",
+    direccion: "cabecera",
+    telefono: "12114254",
+    cargo: "Vendedor"
+})
 /**
  * Relations 
  */
 
-use("db_example")
-db.sucursal.aggregate([
-    {
-        $match: {
-            sucursal_id: 1 
-        }
-    },
+
+/**
+ * Consults
+ */
+
+/** 
+ * Mostrar todos los clientes registrados en la base de datos.
+ */ 
+
+use("db_example");
+db.cliente.find(); 
+
+/**
+ * Obtener todos los automóviles disponibles para alquiler
+ */
+
+use("db_example");
+db.reserva.find({Estado: "Disponible"}); 
+
+/**
+ * Listar todos los alquileres activos junto con los datos de los
+   clientes relacionados
+ */
+
+use("db_example"); 
+db.cliente.aggregate([
     {
         $lookup: {
-            from: "sucursal_automovil",
-            localField: "_id",
-            foreignField: "sucursal_id",
-            as: "autos" 
+          from: "alquiler",
+          localField: "_id",
+          foreignField: "ID_cliente",
+          as: "alquiler_cliente"
         }
     },
     {
         $project: {
-            _id: 0, 
-            Nombre: 1,
-            "autos._id": 1,
-            "autos.Cantidad_Disponible": 1 
+            _id: 0,
+            nombre: 1,
+            DNI: 1,
+            email: 1,
+            "alquiler_cliente.estado": 1,
+            "alquiler_cliente.fecha_inicio": 1,
+            "alquiler_cliente.fecha_fin": 1,
+            "alquiler_cliente.costo_total": 1,
+        }
+    },
+    {
+        $match: {
+            "alquiler_cliente.estado": {$eq: "realizado"}
         }
     }
-]);
-
+])
