@@ -27,11 +27,10 @@ for(let x = 0; x < options.length; x++) db.createCollection(options[x])
 
 use("db_example");
 db.sucursal.insertOne({
-    _id: 1,
-    sucursal_id: 1,
-    nombre: "Sucursal la mayoritaria",
-    direccion: "Calle 33",
-    telefono: "84832131321"
+    _id: 2,
+    nombre: "Sucursal la minorista",
+    direccion: "Calle 13",
+    telefono: "45454545454"
 }); 
 
 db.automovil.insertOne({
@@ -46,11 +45,12 @@ db.automovil.insertOne({
 });
 
 db.sucursal_automovil.insertOne({
-    _id: 1,
-    sucursal_id: 1,
-    automovil_id: 1,
-    cantidad_disponible: 15
+    _id: 3,
+    sucursal_id: 2,
+    automovil_id: 123,
+    cantidad_disponible: 10
 }); 
+
 db.reserva.insertOne({
     _id: 1,
     ID_cliente: 1,
@@ -61,7 +61,6 @@ db.reserva.insertOne({
     Estado: "Realizado"
 })
 
-use("db_example")
 db.cliente.insertOne({
     _id: 1,
     nombre: "juan",
@@ -81,7 +80,7 @@ db.alquiler.insertOne({
     costo_total: 100,
     estado: "realizado"
 })
-use("db_example")
+
 db.registro_devolucion.insertOne({
     _id: 1, 
     ID_alquiler: 1,
@@ -166,3 +165,159 @@ db.cliente.aggregate([
         }
     }
 ])
+
+/**
+ * Mostrar todas las reservas pendientes con los datos del cliente 
+   y el automóvil reservado.
+ */
+
+use("db_example");
+db.getCollection("reserva").aggregate([
+    {
+        $match: {Estado: "Realizado"}
+    },
+    {
+        $lookup: {
+          from: "cliente",
+          localField: "ID_cliente",
+          foreignField: "_id",
+          as: "clienteR"
+        }
+    },
+    {
+        $unwind: "$clienteR"
+    },
+
+    {
+        $lookup: {
+            from: "automovil",
+            localField: "ID_automovil",
+            foreignField: "_id",
+            as: "automovilR"
+        }
+    },
+    {
+        $unwind: "$automovilR"
+    },
+    {
+        $project: {
+            _id: 0,
+            Estado: 1, 
+            clienteR: {nombre: 1, apellido: 1, email: 1},
+            automovilR: {Anio: 1, modelo: 1, marca: 1}
+        }
+    }
+])
+
+
+/**
+ * Obtener los detalles del alquiler con el ID_Alquiler específico.
+ */
+
+use("db_example");
+db.alquiler.aggregate([
+    {
+        $match: {_id: 1} // * Id especifico
+    },
+    {
+        $project: {
+            _id: 0,
+            fecha_inicio: 1, 
+            fecha_fin: 1,
+            estado: 1,
+            costo_total: 1
+        }
+    }
+])
+
+/**
+ * Listar los empleados con el cargo Vendedor
+ */
+
+use("db_example");
+db.empleado.aggregate([
+    {
+        $match: {cargo: "Vendedor"} // * Cargo para filtrado
+    },
+    {
+        $project: {
+            _id: 0,
+            nombre: 1,
+            apellido: 1,
+            telefono: 1,
+            cargo: 1
+        }
+    }
+])
+
+
+/**
+ * Mostrar la cantidad total de automóviles disponibles en cada 
+   sucursal.
+ */
+use("db_example");
+
+   db.sucursal.aggregate([
+        {
+            $lookup: {
+              from: "sucursal_automovil",
+              localField: "_id",
+              foreignField: "sucursal_id",
+              as: "sucursal"
+            }
+        },
+        {
+            $unwind: "$sucursal"
+        },
+        {
+            $group: {
+                _id: "$nombre",
+                Cantidad: {$sum: "$sucursal.cantidad_disponible"}
+            }
+        }
+]);
+
+/**
+ * Obtener el costo total de un alquiler específico.
+ */
+use("db_example")
+db.alquiler.aggregate([
+    {
+        $match: {_id: 1} // * ID especifico
+    },
+    {
+        $lookup: {
+          from: "cliente",
+          localField: "ID_cliente",
+          foreignField: "_id",
+          as: "clienteR"
+        }
+    },
+    {
+        $lookup:{
+            from: "automovil",
+            localField: "ID_automovil",
+            foreignField: "_id",
+            as: "automovilR"
+        }
+    },
+    {
+        $unwind: "$clienteR"
+    },
+    {
+        $project: {
+            _id: 0,
+            costo_total: 1,
+            estado: 1,
+            clienteR: {nombre: 1, apellido: 1},
+        }
+    }
+])  
+
+
+/**
+ * Listar los clientes con el DNI específico.
+ */
+
+use("db_example")
+db.cliente.find({DNI: "12331312"}) /** DNI especifico */
