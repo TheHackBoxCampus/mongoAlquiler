@@ -1,7 +1,7 @@
 /**
  * Create bd
  */
-use("db_example");
+use("alquilerdb");
 
 /**
  * ? Create collections
@@ -25,7 +25,7 @@ for (let x = 0; x < options.length; x++) db.createCollection(options[x]);
  * Structure for collections
  */
 
-use("db_example");
+use("alquilerdb");
 db.sucursal.insertOne({
   _id: 2,
   nombre: "Sucursal la minorista",
@@ -179,22 +179,20 @@ db.empleado.insertOne({
  * Mostrar todos los clientes registrados en la base de datos.
  */
 
-use("db_example");
+use("alquilerdb");
 db.cliente.find();
 
 /**
  * Obtener todos los automóviles disponibles para alquiler
  */
-
-use("db_example");
+use("alquilerdb");
 db.reserva.find({ Estado: "Disponible" });
 
 /**
  * Listar todos los alquileres activos junto con los datos de los
    clientes relacionados
  */
-
-use("db_example");
+use("alquilerdb");
 db.cliente.aggregate([
   {
     $lookup: {
@@ -228,7 +226,7 @@ db.cliente.aggregate([
    y el automóvil reservado.
  */
 
-use("db_example");
+use("alquilerdb");
 db.getCollection("reserva").aggregate([
   {
     $match: { Estado: "pendiente" }, // * <- Estado pendiente
@@ -270,7 +268,7 @@ db.getCollection("reserva").aggregate([
  * Obtener los detalles del alquiler con el ID_Alquiler específico.
  */
 
-use("db_example");
+use("alquilerdb");
 db.alquiler.aggregate([
   {
     $match: { _id: 1 }, // * Id especifico
@@ -289,8 +287,7 @@ db.alquiler.aggregate([
 /**
  * Listar los empleados con el cargo Vendedor
  */
-
-use("db_example");
+use("alquilerdb");
 db.empleado.aggregate([
   {
     $match: { cargo: "Vendedor" }, // * Cargo para filtrado
@@ -310,7 +307,7 @@ db.empleado.aggregate([
  * Mostrar la cantidad total de automóviles "disponibles" en cada 
    sucursal.
  */
-use("db_example");
+use("alquilerdb");
 db.sucursal.aggregate([
   {
     $lookup: {
@@ -334,7 +331,7 @@ db.sucursal.aggregate([
 /**
  * Obtener el costo total de un alquiler específico.
  */
-use("db_example");
+use("alquilerdb");
 db.alquiler.aggregate([
   {
     $match: { _id: 1 }, // * ID especifico
@@ -372,15 +369,14 @@ db.alquiler.aggregate([
  * Listar los clientes con el DNI específico.
  */
 
-use("db_example");
+use("alquilerdb");
 db.cliente.find({ DNI: "12331312" }); /** DNI especifico */
 
 /**
  * Mostrar todos los automóviles con una capacidad mayor a 5
     personas.
  */
-
-use("db_example");
+use("alquilerdb");
 db.automovil.find({ capacidad: { $gt: 5 } });
 
 /** 
@@ -388,15 +384,14 @@ db.automovil.find({ capacidad: { $gt: 5 } });
    2023-07-05. 
  */
 
-use("db_example");
+use("alquilerdb");
 db.alquiler.find({ fecha_inicio: { $eq: "2023-07-05" } });
 
 /**
  * Listar las reservas pendientes realizadas por un cliente
    específico.
  */
-
-use("db_example");
+use("alquilerdb");
 db.reserva.aggregate([
   {
     $lookup: {
@@ -428,7 +423,7 @@ db.reserva.aggregate([
  * Mostrar los empleados con cargo de "Gerente" o "Asistente".
  */
 
-use("db_example");
+use("alquilerdb");
 db.empleado.find({
   $or: [{ cargo: "Asistente" }, { cargo: "Gerente" }],
 });
@@ -438,7 +433,7 @@ db.empleado.find({
  * alquiler.
  */
 
-use("db_example");
+use("alquilerdb");
 db.alquiler.aggregate([
   {
     $lookup: {
@@ -468,7 +463,7 @@ db.alquiler.aggregate([
  * Listar todos los automóviles ordenados por marca y modelo.
  */
 
-use("db_example");
+use("alquilerdb");
 db.automovil.find().sort(
   {
     marca: 1,
@@ -484,8 +479,7 @@ db.automovil.find().sort(
  * Mostrar la cantidad total de automóviles en cada sucursal junto
    con su dirección.
  */ 
-
-use("db_example");
+use("alquilerdb");
 db.sucursal.aggregate([
     {
         $lookup: {
@@ -522,7 +516,7 @@ db.sucursal.aggregate([
    datos.
  */
 
-use("db_example");
+use("alquilerdb");
 db.alquiler.aggregate([
     {
         $group: {
@@ -547,7 +541,7 @@ db.alquiler.aggregate([
  */
 
 
-use("db_example");
+use("alquilerdb");
 db.automovil.aggregate([
     {
         $match: {
@@ -577,7 +571,7 @@ db.automovil.aggregate([
 // ----------------------------------------------------------------------
 // * Listar los alquileres con fecha de inicio entre '2023-07-05' y '2023-07-10'.
 
-use("db_example");
+use("alquilerdb");
 db.alquiler.aggregate([
     {
         $match: {
