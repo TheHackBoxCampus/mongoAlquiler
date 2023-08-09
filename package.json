@@ -1,0 +1,22 @@
+{
+  "name": "mongoalquiler",
+  "version": "1.0.0",
+  "description": "Cuando hablamos de bases de datos tendemos a pensar en SQL y el modelo de bases de datos relacional, pero existen alternativas como los modelos no relacionales donde MongoDB es quizá el ejemplo más destacado.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --quiet src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "16.3.1",
+    "express": "4.18.2",
+    "mongodb": "^5.7.0",
+    "morgan": "1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "3.0.1"
+  }
+}
