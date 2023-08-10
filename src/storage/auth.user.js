@@ -1,14 +1,12 @@
 class user {
-    constructor(name, password, email) {
+    constructor(password, email) {
         this.args = arguments 
-        this.name = name;
         this.password = password,
         this.email = email
     }
 
     scapeData() {
         let schema = {
-            name: this.name,
             password: this.password,
             email: this.email
         }
@@ -29,23 +27,40 @@ class user {
          return redirect
     }
     
-    validateContentData([obj] = null) {
-        let arrx = [/^[a-z A-Z 0-9]*$/, /\S+@(\S+\.\S+)/]
-        let obje = {name: "jorge5", email: "kalednarinogmail.com"}
-        let result = ""
+    validateContentData([o] = null) {
+        let x = [/^[a-z A-Z 0-9]*$/,  /\S+@(\S+\.\S+)/]
+        let s = ""
+        let b = false; 
 
-        for(let i = 0; i < arrx.length; i++) {
-            for (let prop in obje) {
-                result += arrx[i].test(obje[prop])
-                i += 1
+        for(let i = 0; i < x.length; i++) {
+            for (let p in o) {
+                s += x[i].test(o[p]) + " "; 
+                i += 1; 
             }
         }
-        return result ;
+
+        let l = s.split(" ")
+        let f = l.filter(p => p != ''); 
+       
+        for(let w = 0; w < f.length; ++w) {
+           if(f[w] == 'false') {
+              b = !b
+              break; 
+            }
+        }
+
+        return b ? 'Algunos de los parametros no cumplen con los requisitos' : o;  
+    }
+
+    validateLengthObject([o]) {
+        let lengths = [[8.16], [30]]
+        
+        for(let x = 0; x < Object.entries(o).length; ++x) {
+            console.log(Object.entries(o)[x])
+        }
     }
 }
 
+let inst = new user("miller", "")
 
-let inst = new user("miller", "false", "kalednarino@gmail.com"); 
-let filter1 = inst.scapeData(); 
-let filter2 = inst.validateContentData(filter1); 
-console.log(filter2)
+export default user; 
