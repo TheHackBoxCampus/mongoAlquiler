@@ -1,4 +1,4 @@
-class user {
+class login {
     constructor(password, email) {
         this.args = arguments 
         this.password = password,
@@ -17,7 +17,7 @@ class user {
                 at = Object.entries(schema).length; 
                 state = true
             }
-            if(this.args.length > Object.entries(schema).length || this.args.length < 3) state = true
+            if(this.args.length > Object.entries(schema).length || this.args.length < 2) state = true
 
             return state ? "parametros incorrectos" : null
         }, 0)
@@ -32,7 +32,7 @@ class user {
         let s = ""
         let b = false; 
 
-        for(let i = 0; i < x.length; i++) {
+        for(let i = 0; i < i.length; i++) {
             for (let p in o) {
                 s += x[i].test(o[p]) + " "; 
                 i += 1; 
@@ -52,15 +52,18 @@ class user {
         return b ? 'Algunos de los parametros no cumplen con los requisitos' : o;  
     }
 
-    validateLengthObject([o]) {
-        let lengths = [[8.16], [30]]
-        
-        for(let x = 0; x < Object.entries(o).length; ++x) {
-            console.log(Object.entries(o)[x])
+    validateLengthObject(o) {
+        let lengths = [[8, 16], [30]]
+        let s = false
+
+        for (let t = 0; t < lengths.length; t++) {
+             o["password"].length < lengths[t][0] || o["password"].length > lengths[t][1] ? s = !s : s = s
+             t += 1
+             o["email"].length > lengths[t][0] ? s = !s : s = s
         }
+
+        return s ? 'Parametros no cumplen con la longitud' : o
     }
 }
 
-let inst = new user("miller", "")
-
-export default user; 
+export default login; 
