@@ -1,4 +1,4 @@
-class login {
+class login_md {
     constructor(password, email) {
         this.args = arguments 
         this.password = password,
@@ -66,4 +66,4 @@ class login {
     }
 }
 
-export default login; 
+export default login_md; 
