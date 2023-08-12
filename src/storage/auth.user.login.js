@@ -22,7 +22,7 @@ class login_md {
             return state ? "parametros incorrectos" : null
         }, 0)
         
-         let redirect = [typeData].map(err => err != null ? err : schema );      
+         let redirect = [typeData].map(err => err != null ? (() => {throw new Error(err) })() : schema );      
          
          return redirect
     }
@@ -32,7 +32,7 @@ class login_md {
         let s = ""
         let b = false; 
 
-        for(let i = 0; i < i.length; i++) {
+        for(let i = 0; i < x.length; i++) {
             for (let p in o) {
                 s += x[i].test(o[p]) + " "; 
                 i += 1; 
@@ -42,27 +42,25 @@ class login_md {
         let l = s.split(" ")
         let f = l.filter(p => p != ''); 
        
-        for(let w = 0; w < f.length; ++w) {
+
+        for(let w = 0; w < f.length; w++) {
            if(f[w] == 'false') {
               b = !b
               break; 
             }
         }
-
-        return b ? 'Algunos de los parametros no cumplen con los requisitos' : o;  
+        return b ? (() => {throw new Error('Algunos de los parametros no cumplen con los requisitos') })() : o;  
     }
 
     validateLengthObject(o) {
         let lengths = [[8, 16], [30]]
         let s = false
+ 
+        if (o["password"].length < lengths[0][0] || o["password"].length > lengths[0][1]) s = true 
+        
+        if (o["email"].length > lengths[1][0]) s = true
 
-        for (let t = 0; t < lengths.length; t++) {
-             o["password"].length < lengths[t][0] || o["password"].length > lengths[t][1] ? s = !s : s = s
-             t += 1
-             o["email"].length > lengths[t][0] ? s = !s : s = s
-        }
-
-        return s ? 'Parametros no cumplen con la longitud' : o
+        return s ? (() => {throw new Error('Parametros no cumplen con la longitud') })() : o
     }
 }
 
