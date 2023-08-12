@@ -3,7 +3,7 @@ import globalProperties from "../env/env.js";
 import axios from "axios";
 import login_md from "../storage/auth.user.login.js";
 
-const gu = async () => {
+const GU = async () => {
     let $server = JSON.parse(globalProperties.SERVER);
     try {
         let c = await axios.get(`http://${$server.hostname}:${$server.port}/users`)
@@ -15,26 +15,45 @@ const gu = async () => {
 }
 
 const login = async (req, res) => {
-    let d = req.body; 
-    let t = await generateToken(); 
-    let u = await gu(); 
-    let ru = []; 
+    let d = Object.keys(req.body).length > 0 ? req.body : {status: 500, message: "Parametros requeridos"};
+    let nd; 
 
-    for(let p in u) {
-        for(let x=0; x < u[p].length; x++){
-            ru.push(u[p][x])
+    if (!d.status) {
+        try {
+            let nu = new login_md(d.password, d.email);
+            let v = nu.scapeData(nu); 
+            let v2 = nu.validateContentData(v); 
+            let v3 = nu.validateLengthObject(v2); 
+            nd = v3
+        
+            let t = await generateToken(); 
+            let u = await GU(); 
+            let ru = []; 
+        
+            for(let p in u) {
+                for(let x=0; x < u[p].length; x++){
+                    ru.push(u[p][x])
+                }
+            }
+        
+            let a = false; 
+            let id; 
+
+            for(let g=0; g < ru.length; g++) {
+                if(ru[g].password == nd.password && ru[g].email == nd.email) { 
+                    id = ru[g].id
+                    a = !a; 
+                }
+            }
+        
+            a ? res.send({user:id, token:t}) : res.status(404).send({status: 404, message: "usuario no encontrado"}); 
+
+        } catch (err) {
+            res.send({ status: 500, message: err.message })
         }
-    }
-
-    let a = false; 
-
-    let nu = new login_md()
-
-    for(let g=0; g < ru.length; g++) {
-        ru[g].name == d.name && ru[g].password == d.password ? a = !a : a = a;
-    }
-
-    a ? res.send({user:d, token:t}) : res.status(401).send("usuario no encontrado");
+ 
+    } else 
+        res.status(500).send(d)
 }
 
 export { login }
