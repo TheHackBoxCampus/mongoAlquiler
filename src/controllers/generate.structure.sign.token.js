@@ -23,7 +23,7 @@ const generateTokenSpecific = async (req, res, next) => {
         })
     
         let t = await tpr; 
-        req.category = {token: t, category: "clientes"}
+        req.category = {token: t, category: req.params.category}
         return next();
     }catch(err){
         return res.status(500).send({status: 500, message: err.message})

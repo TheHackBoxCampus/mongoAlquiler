@@ -14,9 +14,7 @@ const verifyDataMD = (req, res, next) => {
         }catch (err) {
             return res.status(500).send({status: 500, message: err.message})
         }
-    }else {
-        res.status(500).send({status: 500, message: "Parametros requeridos"})
-    }
+    }else { res.status(500).send(d) }
 }
 
 export default verifyDataMD; 
