@@ -1,11 +1,14 @@
 import { Router } from "express";
+import Client from "../storage/structure/clients.js";
+import Cars from "../storage/structure/cars.js";
 import { login } from "../controllers/auth.user.controller.js";
 import verifyDataMD from "../middleware/auth.login.md.js";
 import VTA from "../middleware/verifyjwtSession.js";
 import { numberRequest } from "../limits/setting.limits.js";
 import { generateTokenSpecific } from "../controllers/generate.structure.sign.token.js";
-import { customAuthClientPassport } from "../middleware/verifyTokens/jwt.clients.js";
+import { customAuthPassport } from "../middleware/verifyTokens/jwt.verify.js";
 import searchAllClients from "../controllers/clients.findAll.js";
+import availablesCars from "../controllers/cars.availables.js";
 
 const authUserRoute = Router();
 
@@ -39,8 +42,20 @@ authUserRoute.get(
   "/clientes",
   numberRequest,
   VTA,
-  customAuthClientPassport,
+  customAuthPassport(Client),
   searchAllClients
 );
 
+
+/**
+ * ? Route /Cars
+ */
+
+authUserRoute.get(
+  "/total_automoviles",
+  numberRequest,
+  VTA, 
+  customAuthPassport(Cars),
+  availablesCars
+)
 export default authUserRoute;
