@@ -6,7 +6,7 @@ import globalProperties from "../env/env.js";
 import jwt from "jsonwebtoken"; 
 
 const getClass = (p) => {
-    const o = { 'clientes': Client, 'automoviles' : Car }
+    const o = { 'clientes': Client, 'total_automoviles' : Car }
     let iM = o[p]; 
     
     if (!iM) throw {status: 500, message: "Categoria invalida"} 
