@@ -2,11 +2,15 @@ import "reflect-metadata";
 import { plainToClass, classToPlain } from "class-transformer";
 import Client from "../storage/structure/clients.js"
 import Car from "../storage/structure/cars.js";
+import Branch from "../storage/structure/branch.js"
 import globalProperties from "../env/env.js";
 import jwt from "jsonwebtoken"; 
+import Booking from "../storage/structure/booking.js";
+import Rent from "../storage/structure/rent.js";
+import Employee from "../storage/structure/employee.js";
 
 const getClass = (p) => {
-    const o = { 'clientes': Client, 'total_automoviles' : Car }
+    const o = { 'clientes': Client, 'automoviles' : Car, "sucursal": Branch, "reserva": Booking, "alquiler": Rent, "empleado": Employee}
     let iM = o[p]; 
     
     if (!iM) throw {status: 500, message: "Categoria invalida"} 
