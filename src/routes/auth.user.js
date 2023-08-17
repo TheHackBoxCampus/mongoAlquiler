@@ -55,7 +55,7 @@ authUserRoute.get(
  * */    
 
 authUserRoute.get(
-  "/generate/:category",
+  "/generar/:category",
   numberRequest,
   VTA,
   generateTokenSpecific,
