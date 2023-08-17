@@ -5,6 +5,12 @@
             "name": "juan",
             "password": "juan1212",
             "email": "juandavid@gmail.com"
+        },
+        {
+            "id": 2, 
+            "name": "miller",
+            "password": "miller1212",
+            "email": "kalednarino@gmail.com"
         }
     ]
 }

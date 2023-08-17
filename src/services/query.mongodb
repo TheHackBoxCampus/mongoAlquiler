@@ -170,6 +170,16 @@ db.empleado.insertOne({
   telefono: "12114254",
   cargo: "Vendedor",
 });
+use("alquilerdb");
+db.empleado.insertOne({
+  _id: 2,
+  nombre: "Casanova",
+  apellido: "almides",
+  DNI: "141212",
+  direccion: "giron",
+  telefono: "robles",
+  cargo: "Gerente",
+});
 
 /**
  * Consults
@@ -229,7 +239,7 @@ db.cliente.aggregate([
 use("alquilerdb");
 db.getCollection("reserva").aggregate([
   {
-    $match: { Estado: "pendiente" }, // * <- Estado pendiente
+    $match: { Estado: "Realizado" }, // * <- Estado pendiente
   },
   {
     $lookup: {
